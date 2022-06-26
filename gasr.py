@@ -25,7 +25,7 @@ class SodaClient():
         cfg_proto = ExtendedSodaConfigMsg()
         cfg_proto.channel_count = CHANNEL_COUNT
         cfg_proto.sample_rate = SAMPLE_RATE
-        cfg_proto.api_key = 'dummy_api_key'
+        cfg_proto.api_key = 'ce04d119-129f-404e-b4fe-6b913fffb6cb'
         cfg_proto.language_pack_directory = './SODAModels/'
         cfg_serialized = cfg_proto.SerializeToString()
         self.config = SodaConfig(cfg_serialized, len(cfg_serialized), callback, None)
