@@ -1,0 +1,4 @@
+SODAModels/
+__pycache__/
+libsoda.so
+libsoda.so.og
