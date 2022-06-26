@@ -33,9 +33,9 @@ class SodaClient():
     def start(self):
         self.handle = self.sodalib.CreateExtendedSodaAsync(self.config)
         self.sodalib.ExtendedSodaStart(self.handle)
-        while True:
-            audio = sys.stdin.buffer.read(CHUNK_SIZE)
-            self.sodalib.ExtendedAddAudio(self.handle, audio, len(audio))
+
+    def feed(self, buffer):
+        self.sodalib.ExtendedAddAudio(self.handle, buffer, len(buffer))
 
     def delete(self):
         self.sodalib.DeleteExtendedSodaAsync(self.handle)
@@ -54,5 +54,8 @@ if __name__ == '__main__':
     client = SodaClient()
     try:
         client.start()
+        while True:
+            audio = sys.stdin.buffer.read(CHUNK_SIZE)
+            client.feed(audio)
     except KeyboardInterrupt:
         client.delete()
