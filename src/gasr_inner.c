@@ -16,11 +16,25 @@ typedef void *(*CreateExtendedSodaAsync_t)(struct SodaConfig);
 typedef void (*ExtendedSodaStart_t)(void *);
 typedef void (*ExtendedAddAudio_t)(void *, u_int8_t *, int);
 
+ssize_t blocking_read(int fd, void *buf, size_t count) {
+  ssize_t n = 0;
+  size_t bytes_remaining = count;
+  while (bytes_remaining > 0) {
+    n = read(fd, buf + (count - bytes_remaining), bytes_remaining);
+    if (n == -1) {
+      return -1;
+    }
+    bytes_remaining -= n;
+  }
+  return count;
+}
+
 static u_int32_t read_big_endian_u_int32() {
   u_int8_t buffer[4];
-  ssize_t n = read(STDIN_FILENO, buffer, sizeof(buffer));
+  ssize_t n = blocking_read(STDIN_FILENO, buffer, sizeof(buffer));
   if (n != sizeof(buffer)) {
-    fprintf(stderr, "error reading from stdin\n");
+    fprintf(stderr, "error reading from stdin, expected %zd but got %zd\n",
+            sizeof(buffer), n);
     exit(1);
   }
   return (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
@@ -74,11 +88,12 @@ int main() {
     exit(1);
   }
 
-  u_int32_t size = read_big_endian_u_int32();
+  ssize_t size = read_big_endian_u_int32();
   char *cfg_serialized = malloc(size);
-  ssize_t n = read(STDIN_FILENO, cfg_serialized, size);
+  ssize_t n = blocking_read(STDIN_FILENO, cfg_serialized, size);
   if (n != size) {
-    fprintf(stderr, "error reading from stdin\n");
+    fprintf(stderr, "error reading from stdin, expected %zd but got %zd\n",
+            size, n);
     exit(1);
   }
 
@@ -95,11 +110,12 @@ int main() {
   ExtendedSodaStart(handle);
 
   while (1) {
-    u_int32_t size = read_big_endian_u_int32();
+    ssize_t size = read_big_endian_u_int32();
     u_int8_t *audio = malloc(size);
-    ssize_t n = read(STDIN_FILENO, audio, size);
+    ssize_t n = blocking_read(STDIN_FILENO, audio, size);
     if (n != size) {
-      fprintf(stderr, "error reading from stdin\n");
+      fprintf(stderr, "error reading from stdin, expected %zd but got %zd\n",
+              size, n);
       exit(1);
     }
     ExtendedAddAudio(handle, audio, size);

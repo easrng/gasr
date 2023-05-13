@@ -15,3 +15,4 @@ bin/libsoda.so:
 format:
 	clang-format -i src/gasr_inner.c
 	black src/gasr_outer.py src/soda_api_pb2.py
+	npx prettier -w src/*.js *.json
