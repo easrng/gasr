@@ -64,8 +64,9 @@ class SodaClient {
       cfg_proto
     );
     const cfg_serialized = cfg_proto.finish();
-    this.inner = spawn(new URL("../bin/gasr_inner", import.meta.url).pathname);
-    this.inner.stderr.pipe(process.stderr);
+    this.inner = spawn(new URL("../bin/gasr_inner", import.meta.url).pathname, {
+      stdio: ["pipe", "pipe", "inherit"],
+    });
     this.inner.stdin.write(
       Buffer.concat([
         new Uint8Array([

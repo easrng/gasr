@@ -18,7 +18,13 @@
   "homepage": "https://github.com/easrng/gasr#readme",
   "type": "module",
   "dependencies": {
+    "chalk": "^5.2.0",
+    "enquirer": "^2.3.6",
+    "ora": "^6.3.0",
     "pbf": "^3.2.1",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "pretty-bytes": "^6.1.0",
+    "tempy": "^3.0.0",
+    "undici": "^5.22.1"
   }
 }
