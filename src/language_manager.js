@@ -62,7 +62,9 @@ if (update) {
         function updateSpinner() {
           spinner.text = `Downloading ${chalk.dim("(")}${prettyBytes(
             downloaded
-          )} ${chalk.dim("/")} ${prettyBytes(update.size)}${chalk.dim(")")}`;
+          ).padStart(7, " ")} ${chalk.dim("/")} ${prettyBytes(
+            update.size
+          ).padStart(7, " ")}${chalk.dim(")")}`;
         }
         updateSpinner();
         body.on("data", (chunk) => {
